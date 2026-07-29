@@ -2,15 +2,13 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-# Data for all 4 wallpaper packs
+# Elite product catalog for Noxel Studio
 PRODUCTS = [
     {
         "id": "01",
         "name": "Starter Pack",
+        "subtitle": "Essential clean backgrounds for daily setup.",
         "price": "2.99",
-        "subtitle": "Essential clean backgrounds to refresh your daily setup.",
-        "support_email": "support@studiowallpapers.com",
-        "stripe_link": "YOUR_STRIPE_LINK_1",
         "included": [
             "2x Desktop Wallpapers (16:9 / Ultrawide)",
             "2x Mobile Wallpapers (iPhone & Android)",
@@ -18,66 +16,54 @@ PRODUCTS = [
             "Lifetime access to future updates",
             "Standard HD Quality Files"
         ],
-        "previews": ["#1a1a22", "#111d2e", "#221616", "#18241b"]
+        "stripe_link": "https://buy.stripe.com/your_link_1"
     },
     {
         "id": "02",
-        "name": "Pro Creator Pack",
-        "price": "3.99",
-        "subtitle": "Expanded collection tailored for dual-monitor workflows.",
-        "support_email": "support@studiowallpapers.com",
-        "stripe_link": "YOUR_STRIPE_LINK_2",
+        "name": "Pro Creator",
+        "subtitle": "Optimized ultrawide setups and sleek aesthetics.",
+        "price": "4.99",
         "included": [
-            "4x Desktop Wallpapers (16:9 / Ultrawide)",
-            "4x Mobile Wallpapers (iPhone & Android)",
+            "5x Ultrawide & Dual Monitor Wallpapers",
+            "Custom Mobile Lockscreen Crops",
             "Instant digital download (.zip archive)",
             "Lifetime access to future updates",
-            "Dual-Monitor Matching Sets",
-            "Standard HD Quality Files"
+            "4K Ultra HD Crisp Resolution"
         ],
-        "previews": ["#141419", "#1b2214", "#22141f", "#142220"]
+        "stripe_link": "https://buy.stripe.com/your_link_2"
     },
     {
         "id": "03",
-        "name": "Studio Collection",
+        "name": "Studio Edition",
+        "subtitle": "Complete designer archive for advanced visual workflows.",
         "price": "5.99",
-        "subtitle": "Comprehensive set upgraded to crisp 4K Ultra HD resolution.",
-        "support_email": "support@studiowallpapers.com",
-        "stripe_link": "YOUR_STRIPE_LINK_3",
         "included": [
-            "7x Desktop Wallpapers (16:9 / Ultrawide)",
-            "7x Mobile Wallpapers (iPhone & Android)",
+            "Full Library of Dynamic Wallpapers",
+            "Optimized for High-PPI OLED & Retina Displays",
             "Instant digital download (.zip archive)",
             "Lifetime access to future updates",
-            "Dual-Monitor Matching Sets",
-            "Crisp 4K Ultra HD Quality Files"
+            "Master Resolution Archives"
         ],
-        "previews": ["#1e1b2e", "#2e1b1b", "#1b2e25", "#29291b"]
+        "stripe_link": "https://buy.stripe.com/your_link_3"
     },
     {
         "id": "04",
         "name": "Ultimate Mega Bundle",
+        "subtitle": "All current & future releases in one master package.",
         "price": "7.99",
-        "subtitle": "The complete archive with every extra asset and raw file.",
-        "support_email": "support@studiowallpapers.com",
-        "stripe_link": "YOUR_STRIPE_LINK_4",
         "included": [
-            "16x Desktop Wallpapers (16:9 / Ultrawide)",
-            "16x Mobile Wallpapers (iPhone & Android)",
+            "Complete Noxel Studio Asset Vault",
+            "Priority Support & Early Access Passes",
             "Instant digital download (.zip archive)",
             "Lifetime access to future updates",
-            "Dual-Monitor Matching Sets",
-            "Crisp 4K Ultra HD Quality Files",
-            "Bonus iPad & Tablet Specific Aspect Ratios",
-            "Uncompressed Raw Asset Files",
-            "VIP Discord Community Access"
+            "Exclusive Unreleased Drops"
         ],
-        "previews": ["#22182b", "#18262b", "#2b2518", "#2b1818"]
+        "stripe_link": "https://buy.stripe.com/your_link_4"
     }
 ]
 
 @app.route('/')
-def home():
+def index():
     return render_template('index.html', products=PRODUCTS)
 
 if __name__ == '__main__':
