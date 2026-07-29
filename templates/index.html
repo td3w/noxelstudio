@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Wallpapers | Complete Collections</title>
+    <title>Studio Wallpapers | Collections</title>
     <style>
         :root {
             --bg: #0a0a0c;
@@ -96,10 +96,17 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             cursor: pointer;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--muted);
+            font-family: monospace;
         }
         .thumb-btn:hover, .thumb-btn.active {
             border-color: var(--accent);
+            color: var(--text);
         }
         .details-pane { display: flex; flex-direction: column; justify-content: space-between; }
         h2.product-title { font-size: 1.5rem; margin: 0 0 8px 0; font-weight: 600; letter-spacing: -0.01em; }
@@ -152,6 +159,13 @@
         }
         .section-box h3 { font-size: 1rem; margin: 0 0 12px 0; font-weight: 600; }
         .section-box p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+        
+        .product-panel {
+            display: none;
+        }
+        .product-panel.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -162,43 +176,53 @@
             <p>Handcrafted desktop & mobile backgrounds for clean setups.</p>
         </div>
 
-        {% for product in products %}
-        <div class="nav">
-            <strong>STORE // {{ product.id }}</strong>
-            <span>Digital Asset</span>
-        </div>
-
-        <div class="product-grid">
-            <div class="preview-pane">
-                <div class="main-img" id="displayBox-{{ product.id }}">
-                    [ Preview: {{ product.name }} 01 ]
-                </div>
+        <!-- Thumbnail Navigation Bar (Controls which package is shown) -->
+        <div class="product-grid" style="padding: 15px; margin-bottom: 20px;">
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-size: 0.75rem; font-family: monospace; color: var(--muted);">SELECT TIER:</span>
                 <div class="thumb-row">
-                    <button class="thumb-btn active" onclick="setPreview('displayBox-{{ product.id }}', '{{ product.previews[0] }}', '[ Preview: {{ product.name }} 01 ]', event)"></button>
-                    <button class="thumb-btn" onclick="setPreview('displayBox-{{ product.id }}', '{{ product.previews[1] }}', '[ Preview: {{ product.name }} 02 ]', event)"></button>
-                    <button class="thumb-btn" onclick="setPreview('displayBox-{{ product.id }}', '{{ product.previews[2] }}', '[ Preview: {{ product.name }} 03 ]', event)"></button>
-                    <button class="thumb-btn" onclick="setPreview('displayBox-{{ product.id }}', '{{ product.previews[3] }}', '[ Preview: {{ product.name }} 04 ]', event)"></button>
+                    <button class="thumb-btn active" onclick="switchProduct(0, this)">01 / Starter</button>
+                    <button class="thumb-btn" onclick="switchProduct(1, this)">02 / Pro</button>
+                    <button class="thumb-btn" onclick="switchProduct(2, this)">03 / Studio</button>
+                    <button class="thumb-btn" onclick="switchProduct(3, this)">04 / Ultimate</button>
                 </div>
             </div>
+        </div>
 
-            <div class="details-pane">
-                <div>
-                    <h2 class="product-title">{{ product.name }}</h2>
-                    <div class="price-tag">{{ product.price }}€</div>
-                    <p class="desc">{{ product.subtitle }}</p>
+        <!-- Dynamic Product Panels -->
+        {% for product in products %}
+        <div class="product-panel {% if loop.first %}active{% endif %}" id="panel-{{ loop.index0 }}">
+            <div class="nav">
+                <strong>STORE // {{ product.id }}</strong>
+                <span>Digital Asset</span>
+            </div>
 
-                    <ul class="specs-list">
-                        {% for item in product.included %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
+            <div class="product-grid">
+                <div class="preview-pane">
+                    <div class="main-img" style="background: {{ product.previews[0] }};">
+                        [ Preview: {{ product.name }} ]
+                    </div>
                 </div>
 
-                <div>
-                    <button class="btn-action" onclick="window.location.href='{{ product.stripe_link }}'">Purchase Pack ({{ product.price }}€)</button>
-                    <div class="meta-footer">Secure delivery · Instant ZIP link</div>
-                    <div style="text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 15px;">
-                        Questions? Contact <a href="mailto:{{ product.support_email }}" style="color: var(--text);">{{ product.support_email }}</a>
+                <div class="details-pane">
+                    <div>
+                        <h2 class="product-title">{{ product.name }}</h2>
+                        <div class="price-tag">{{ product.price }}€</div>
+                        <p class="desc">{{ product.subtitle }}</p>
+
+                        <ul class="specs-list">
+                            {% for item in product.included %}
+                            <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <button class="btn-action" onclick="window.location.href='{{ product.stripe_link }}'">Purchase Pack ({{ product.price }}€)</button>
+                        <div class="meta-footer">Secure delivery · Instant ZIP link</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 15px;">
+                            Questions? Contact <a href="mailto:{{ product.support_email }}" style="color: var(--text);">{{ product.support_email }}</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -212,15 +236,20 @@
     </div>
 
     <script>
-        function setPreview(boxId, colorHex, textLabel, event) {
-            const box = document.getElementById(boxId);
-            box.style.background = colorHex;
-            box.innerText = textLabel;
+        function switchProduct(index, clickedBtn) {
+            // Hide all product panels
+            document.querySelectorAll('.product-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
             
-            // Find parent thumbnail row and toggle active state only within this product card
-            const thumbRow = event.target.parentElement;
-            thumbRow.querySelectorAll('.thumb-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            // Show the selected product panel
+            document.getElementById('panel-' + index).classList.add('active');
+            
+            // Update active state on buttons
+            document.querySelectorAll('.thumb-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            clickedBtn.classList.add('active');
         }
     </script>
 
