@@ -23,10 +23,10 @@
             color: var(--text);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 80px 20px;
+            padding: 40px 20px; /* Reduced top padding to bring content up */
             display: flex;
             justify-content: center;
-            line-height: 1.6;
+            line-height: 1.5;
         }
         .wrapper {
             width: 100%;
@@ -34,11 +34,11 @@
         }
         .header-title {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 30px; /* Reduced margin */
         }
         .header-title h1 {
-            font-size: 2.2rem;
-            margin: 0 0 10px 0;
+            font-size: 1.9rem; /* Slightly smaller for balance */
+            margin: 0 0 6px 0;
             font-weight: 700;
             letter-spacing: -0.03em;
             background: linear-gradient(180deg, #fff 0%, #a1a1b5 100%);
@@ -47,7 +47,7 @@
         }
         .header-title p {
             color: var(--muted);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             margin: 0;
             font-weight: 400;
         }
@@ -56,37 +56,37 @@
         .switcher-card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 12px 16px; /* Tighter padding */
+            margin-bottom: 20px; /* Tighter margin */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         .switcher-label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-family: monospace;
             color: var(--muted);
             letter-spacing: 0.1em;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: block;
         }
         .thumb-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 8px;
         }
         @media (max-width: 600px) {
-            .thumb-row { grid-template-columns: repeat(2, 1fr); }
+            .thumb-row { grid-template-columns: repeat(2, 1fr); gap: 6px; }
         }
         .thumb-btn {
             background: var(--accent-dim);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 12px 10px;
+            padding: 10px;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
             text-align: left;
         }
         .thumb-btn:hover {
@@ -94,21 +94,22 @@
             border-color: var(--border-active);
         }
         .thumb-btn.active {
-            background: #ffffff;
+            background: linear-gradient(180deg, #ffffff 0%, #e6e6e6 100%);
             border-color: #ffffff;
             color: #000000;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
         }
-        .thumb-btn.active .btn-tier { color: rgba(0,0,0,0.6); }
+        .thumb-btn.active .btn-tier { color: rgba(0,0,0,0.5); }
         .thumb-btn.active .btn-name { color: #000000; font-weight: 700; }
         
         .btn-tier {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-family: monospace;
             color: var(--muted);
             text-transform: uppercase;
         }
         .btn-name {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--text);
         }
@@ -122,45 +123,50 @@
         .product-panel.active {
             display: block;
             opacity: 1;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .product-grid {
             display: grid;
             grid-template-columns: 1.1fr 1fr;
-            gap: 30px;
+            gap: 24px; /* Tighter gap */
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 35px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            border-radius: 12px;
+            padding: 24px; /* Tighter padding */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
         @media (max-width: 768px) {
-            .product-grid { grid-template-columns: 1fr; padding: 24px; }
+            .product-grid { grid-template-columns: 1fr; padding: 20px; }
         }
         
         .preview-pane { display: flex; flex-direction: column; gap: 12px; }
         .main-img {
             width: 100%;
-            height: 380px;
+            height: 310px; /* Reduced height to fit on screen */
             background: linear-gradient(135deg, #121218 0%, #0a0a0e 100%);
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: monospace;
             color: var(--muted);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
         }
         
         .details-pane { display: flex; flex-direction: column; justify-content: space-between; }
         
         .nav-tag {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-family: monospace;
             color: var(--muted);
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             display: inline-block;
             background: var(--accent-dim);
             border: 1px solid var(--border);
@@ -169,32 +175,32 @@
         }
         
         h2.product-title { 
-            font-size: 1.6rem; 
-            margin: 0 0 8px 0; 
+            font-size: 1.4rem; 
+            margin: 0 0 4px 0; 
             font-weight: 600; 
             letter-spacing: -0.02em; 
         }
         .price-tag { 
-            font-size: 1.4rem; 
+            font-size: 1.25rem; 
             font-weight: 700; 
-            margin-bottom: 14px; 
+            margin-bottom: 12px; 
             color: #ffffff; 
             letter-spacing: -0.01em;
         }
-        .desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+        .desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; line-height: 1.4; }
         
         .specs-list {
             list-style: none;
             padding: 0;
-            margin: 0 0 28px 0;
-            font-size: 0.85rem;
+            margin: 0 0 20px 0;
+            font-size: 0.8rem;
             color: var(--muted);
         }
         .specs-list li {
-            margin-bottom: 10px;
+            margin-bottom: 6px; /* Tighter list */
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .specs-list li::before {
             content: "—";
@@ -204,36 +210,29 @@
         
         .btn-action {
             width: 100%;
-            background: var(--accent);
+            background: linear-gradient(180deg, #ffffff 0%, #d4d4d4 100%);
             color: #070709;
             border: none;
-            padding: 15px;
+            padding: 14px;
             font-size: 0.95rem;
-            font-weight: 600;
+            font-weight: 700;
             border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.1s ease, opacity 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
         }
-        .btn-action:hover { opacity: 0.92; }
+        .btn-action:hover { 
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25); 
+        }
         .btn-action:active { transform: scale(0.98); }
         
         .meta-footer {
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--muted);
-            margin-top: 12px;
+            margin-top: 10px;
             font-family: monospace;
         }
-        
-        .section-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 28px;
-            margin-top: 30px;
-        }
-        .section-box h3 { font-size: 0.95rem; margin: 0 0 10px 0; font-weight: 600; letter-spacing: -0.01em; }
-        .section-box p { margin: 0; font-size: 0.88rem; color: var(--muted); }
     </style>
 </head>
 <body>
@@ -294,19 +293,11 @@
                     <div>
                         <button class="btn-action" onclick="window.location.href='{{ product.stripe_link }}'">Purchase Pack ({{ product.price }}€)</button>
                         <div class="meta-footer">Secure checkout via Stripe · Instant ZIP download</div>
-                        <div style="text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 12px;">
-                            Questions? Reach out at <a href="mailto:{{ product.support_email }}" style="color: var(--text); text-decoration: underline;">{{ product.support_email }}</a>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
         {% endfor %}
-
-        <div class="section-box">
-            <h3>Engineered for High-PPI Displays</h3>
-            <p>Each wallpaper is manually color-graded and optimized to look crisp across modern OLED mobile screens, 4K desktop monitors, and ultrawide setups without artifacting or compression strain.</p>
-        </div>
     </div>
 
     <script>
