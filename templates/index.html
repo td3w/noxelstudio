@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Wallpapers Vol. 1</title>
+    <title>Studio Wallpapers | Complete Collections</title>
     <style>
         :root {
             --bg: #0a0a0c;
@@ -28,11 +28,25 @@
             width: 100%;
             max-width: 800px;
         }
+        .header-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header-title h1 {
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.02em;
+        }
+        .header-title p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
         .nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             font-size: 0.85rem;
             color: var(--muted);
             font-family: monospace;
@@ -51,7 +65,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 30px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
         @media (max-width: 768px) {
             .product-grid { grid-template-columns: 1fr; padding: 20px; }
@@ -88,7 +102,7 @@
             border-color: var(--accent);
         }
         .details-pane { display: flex; flex-direction: column; justify-content: space-between; }
-        h1 { font-size: 1.5rem; margin: 0 0 8px 0; font-weight: 600; letter-spacing: -0.01em; }
+        h2.product-title { font-size: 1.5rem; margin: 0 0 8px 0; font-weight: 600; letter-spacing: -0.01em; }
         .price-tag { font-size: 1.3rem; font-weight: 600; margin-bottom: 15px; color: #ffffff; }
         .desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 20px; }
         
@@ -134,36 +148,42 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 24px;
-            margin-bottom: 20px;
+            margin-top: 40px;
         }
-        .section-box h2 { font-size: 1rem; margin: 0 0 12px 0; font-weight: 600; }
+        .section-box h3 { font-size: 1rem; margin: 0 0 12px 0; font-weight: 600; }
         .section-box p { margin: 0; font-size: 0.9rem; color: var(--muted); }
     </style>
 </head>
 <body>
 
     <div class="wrapper">
+        <div class="header-title">
+            <h1>Studio Wallpapers</h1>
+            <p>Handcrafted desktop & mobile backgrounds for clean setups.</p>
+        </div>
+
+        {% for product in products %}
         <div class="nav">
-            <strong>STORE // 01</strong>
+            <strong>STORE // {{ product.id }}</strong>
             <span>Digital Asset</span>
         </div>
 
         <div class="product-grid">
             <div class="preview-pane">
-                <div class="main-img" id="displayBox">
-                    [ Preview: Wallpaper 01 ]
+                <div class="main-img" id="displayBox-{{ product.id }}">
+                    [ Preview: {{ product.name }} 01 ]
                 </div>
                 <div class="thumb-row">
-                    <button class="thumb-btn active" onclick="setPreview('#1a1a22', '[ Preview: Wallpaper 01 ]')"></button>
-                    <button class="thumb-btn" onclick="setPreview('#111d2e', '[ Preview: Wallpaper 02 ]')"></button>
-                    <button class="thumb-btn" onclick="setPreview('#221616', '[ Preview: Wallpaper 03 ]')"></button>
-                    <button class="thumb-btn" onclick="setPreview('#18241b', '[ Preview: Wallpaper 04 ]')"></button>
+                    <button class="thumb-btn active" onclick="setPreview('displayBox-{{ product.id }}', '{{ product.previews[0] }}', '[ Preview: {{ product.name }} 01 ]', event)"></button>
+                    <button class="thumb-btn" onclick="setPreview('displayBox-{{ product.id }}', '{{ product.previews[1] }}', '[ Preview: {{ product.name }} 02 ]', event)"></button>
+                    <button class="thumb-btn" onclick="setPreview('displayBox-{{ product.id }}', '{{ product.previews[2] }}', '[ Preview: {{ product.name }} 03 ]', event)"></button>
+                    <button class="thumb-btn" onclick="setPreview('displayBox-{{ product.id }}', '{{ product.previews[3] }}', '[ Preview: {{ product.name }} 04 ]', event)"></button>
                 </div>
             </div>
 
             <div class="details-pane">
                 <div>
-                    <h1>{{ product.name }}</h1>
+                    <h2 class="product-title">{{ product.name }}</h2>
                     <div class="price-tag">{{ product.price }}€</div>
                     <p class="desc">{{ product.subtitle }}</p>
 
@@ -175,8 +195,7 @@
                 </div>
 
                 <div>
-                    <!-- Replace the URL inside window.location.href with your actual Stripe Payment Link later -->
-                    <button class="btn-action" onclick="window.location.href='YOUR_STRIPE_PAYMENT_LINK'">Purchase Pack ({{ product.price }}€)</button>
+                    <button class="btn-action" onclick="window.location.href='{{ product.stripe_link }}'">Purchase Pack ({{ product.price }}€)</button>
                     <div class="meta-footer">Secure delivery · Instant ZIP link</div>
                     <div style="text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 15px;">
                         Questions? Contact <a href="mailto:{{ product.support_email }}" style="color: var(--text);">{{ product.support_email }}</a>
@@ -184,20 +203,23 @@
                 </div>
             </div>
         </div>
+        {% endfor %}
 
         <div class="section-box">
-            <h2>About the Collection</h2>
+            <h3>About the Collections</h3>
             <p>Designed for minimal setups, coding environments, and high-PPI screens. Each wallpaper has been manually checked for color grading consistency across mobile OLED and desktop IPS panels.</p>
         </div>
     </div>
 
     <script>
-        function setPreview(colorHex, textLabel) {
-            const box = document.getElementById('displayBox');
+        function setPreview(boxId, colorHex, textLabel, event) {
+            const box = document.getElementById(boxId);
             box.style.background = colorHex;
             box.innerText = textLabel;
             
-            document.querySelectorAll('.thumb-btn').forEach(btn => btn.classList.remove('active'));
+            // Find parent thumbnail row and toggle active state only within this product card
+            const thumbRow = event.target.parentElement;
+            thumbRow.querySelectorAll('.thumb-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
     </script>
