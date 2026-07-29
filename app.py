@@ -2,12 +2,12 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-# Elite product catalog for Noxel Studio
+# Product catalog for Noxel Studio
 PRODUCTS = [
     {
         "id": "01",
         "name": "Starter Pack",
-        "subtitle": "Essential clean backgrounds for daily setup.",
+        "subtitle": "Essential clean backgrounds to refresh your daily setup.",
         "price": "2.99",
         "included": [
             "2x Desktop Wallpapers (16:9 / Ultrawide)",
@@ -21,28 +21,28 @@ PRODUCTS = [
     {
         "id": "02",
         "name": "Pro Creator",
-        "subtitle": "Optimized ultrawide setups and sleek aesthetics.",
+        "subtitle": "Optimized ultrawide setups for professional creators.",
         "price": "4.99",
         "included": [
-            "5x Ultrawide & Dual Monitor Wallpapers",
-            "Custom Mobile Lockscreen Crops",
+            "5x Ultrawide Wallpapers (21:9 / 32:9)",
+            "4x Mobile Lockscreen & Home Wallpapers",
             "Instant digital download (.zip archive)",
             "Lifetime access to future updates",
-            "4K Ultra HD Crisp Resolution"
+            "4K Ultra HD Crisp Files"
         ],
         "stripe_link": "https://buy.stripe.com/your_link_2"
     },
     {
         "id": "03",
         "name": "Studio Edition",
-        "subtitle": "Complete designer archive for advanced visual workflows.",
+        "subtitle": "Complete aesthetic designer archive for immersive setups.",
         "price": "5.99",
         "included": [
-            "Full Library of Dynamic Wallpapers",
-            "Optimized for High-PPI OLED & Retina Displays",
+            "10x Curated Studio Wallpapers",
+            "Dynamic Dual-Monitor Matching Sets",
             "Instant digital download (.zip archive)",
             "Lifetime access to future updates",
-            "Master Resolution Archives"
+            "Uncompressed Master Files"
         ],
         "stripe_link": "https://buy.stripe.com/your_link_3"
     },
@@ -52,11 +52,10 @@ PRODUCTS = [
         "subtitle": "All current & future releases in one master package.",
         "price": "7.99",
         "included": [
-            "Complete Noxel Studio Asset Vault",
-            "Priority Support & Early Access Passes",
+            "Full Noxel Studio Wallpaper Vault",
+            "Priority Access to All Future Drops",
             "Instant digital download (.zip archive)",
-            "Lifetime access to future updates",
-            "Exclusive Unreleased Drops"
+            "Lifetime access to future updates"
         ],
         "stripe_link": "https://buy.stripe.com/your_link_4"
     }
