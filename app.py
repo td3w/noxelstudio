@@ -1,10 +1,7 @@
-# Updating the exact python file to match your requested product catalog and bullet points.
-
-flask_code = """from flask import Flask, render_template
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
-# Product catalog for Noxel Studio
 PRODUCTS = [
     {
         "id": "01",
@@ -76,9 +73,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
-"""
-
-with open("app.py", "w") as f:
-    f.write(flask_code)
-
-print("Successfully updated app.py with your exact pricing and bullet points.")
