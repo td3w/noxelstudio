@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Wallpapers | Collections</title>
+    <title>Studio Wallpapers // Collections</title>
     <style>
         :root {
-            --bg: #0a0a0c;
-            --surface: #121216;
-            --border: #22222a;
-            --text: #ededef;
-            --muted: #8e8e99;
+            --bg: #070709;
+            --surface: #0f0f13;
+            --surface-hover: #16161c;
+            --border: #1e1e26;
+            --border-active: #3f3f4e;
+            --text: #f4f4f6;
+            --muted: #8b8b9e;
             --accent: #ffffff;
+            --accent-dim: #1a1a24;
+            --glow: rgba(255, 255, 255, 0.03);
         }
         * { box-sizing: border-box; }
         body {
@@ -19,153 +23,217 @@
             color: var(--text);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 60px 20px;
+            padding: 80px 20px;
             display: flex;
             justify-content: center;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         .wrapper {
             width: 100%;
-            max-width: 800px;
+            max-width: 840px;
         }
         .header-title {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
         .header-title h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin: 0 0 10px 0;
-            letter-spacing: -0.02em;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(180deg, #fff 0%, #a1a1b5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .header-title p {
             color: var(--muted);
             font-size: 0.95rem;
             margin: 0;
+            font-weight: 400;
         }
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            font-size: 0.85rem;
-            color: var(--muted);
-            font-family: monospace;
-        }
-        .nav span {
+        
+        /* Switcher Bar */
+        .switcher-card {
             background: var(--surface);
             border: 1px solid var(--border);
-            padding: 4px 10px;
-            border-radius: 4px;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
-        .product-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 30px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 40px;
-        }
-        @media (max-width: 768px) {
-            .product-grid { grid-template-columns: 1fr; padding: 20px; }
-        }
-        .preview-pane { display: flex; flex-direction: column; gap: 12px; }
-        .main-img {
-            width: 100%;
-            height: 340px;
-            background: #1a1a22;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .switcher-label {
+            font-size: 0.7rem;
             font-family: monospace;
             color: var(--muted);
-            font-size: 0.85rem;
-            transition: background 0.3s ease;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+            display: block;
         }
         .thumb-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .thumb-row { grid-template-columns: repeat(2, 1fr); }
         }
         .thumb-btn {
-            height: 50px;
-            background: var(--bg);
+            background: var(--accent-dim);
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 8px;
+            padding: 12px 10px;
             cursor: pointer;
-            transition: border-color 0.2s, background 0.2s;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: left;
+        }
+        .thumb-btn:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-active);
+        }
+        .thumb-btn.active {
+            background: #ffffff;
+            border-color: #ffffff;
+            color: #000000;
+        }
+        .thumb-btn.active .btn-tier { color: rgba(0,0,0,0.6); }
+        .thumb-btn.active .btn-name { color: #000000; font-weight: 700; }
+        
+        .btn-tier {
+            font-size: 0.65rem;
+            font-family: monospace;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+        .btn-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Product Box */
+        .product-panel {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .product-panel.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 30px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 35px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+        @media (max-width: 768px) {
+            .product-grid { grid-template-columns: 1fr; padding: 24px; }
+        }
+        
+        .preview-pane { display: flex; flex-direction: column; gap: 12px; }
+        .main-img {
+            width: 100%;
+            height: 380px;
+            background: linear-gradient(135deg, #121218 0%, #0a0a0e 100%);
+            border-radius: 10px;
+            border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
-            color: var(--muted);
             font-family: monospace;
+            color: var(--muted);
+            font-size: 0.85rem;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
         }
-        .thumb-btn:hover, .thumb-btn.active {
-            border-color: var(--accent);
-            color: var(--text);
-        }
+        
         .details-pane { display: flex; flex-direction: column; justify-content: space-between; }
-        h2.product-title { font-size: 1.5rem; margin: 0 0 8px 0; font-weight: 600; letter-spacing: -0.01em; }
-        .price-tag { font-size: 1.3rem; font-weight: 600; margin-bottom: 15px; color: #ffffff; }
-        .desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 20px; }
+        
+        .nav-tag {
+            font-size: 0.75rem;
+            font-family: monospace;
+            color: var(--muted);
+            margin-bottom: 12px;
+            display: inline-block;
+            background: var(--accent-dim);
+            border: 1px solid var(--border);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        
+        h2.product-title { 
+            font-size: 1.6rem; 
+            margin: 0 0 8px 0; 
+            font-weight: 600; 
+            letter-spacing: -0.02em; 
+        }
+        .price-tag { 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+            margin-bottom: 14px; 
+            color: #ffffff; 
+            letter-spacing: -0.01em;
+        }
+        .desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
         
         .specs-list {
             list-style: none;
             padding: 0;
-            margin: 0 0 25px 0;
+            margin: 0 0 28px 0;
             font-size: 0.85rem;
             color: var(--muted);
         }
         .specs-list li {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .specs-list li::before {
             content: "—";
             color: var(--text);
+            font-weight: bold;
         }
+        
         .btn-action {
             width: 100%;
             background: var(--accent);
-            color: var(--bg);
+            color: #070709;
             border: none;
-            padding: 14px;
+            padding: 15px;
             font-size: 0.95rem;
             font-weight: 600;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: transform 0.1s ease, opacity 0.2s;
         }
-        .btn-action:hover { opacity: 0.9; }
+        .btn-action:hover { opacity: 0.92; }
+        .btn-action:active { transform: scale(0.98); }
+        
         .meta-footer {
             text-align: center;
             font-size: 0.75rem;
             color: var(--muted);
-            margin-top: 10px;
+            margin-top: 12px;
             font-family: monospace;
         }
+        
         .section-box {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 40px;
+            border-radius: 14px;
+            padding: 28px;
+            margin-top: 30px;
         }
-        .section-box h3 { font-size: 1rem; margin: 0 0 12px 0; font-weight: 600; }
-        .section-box p { margin: 0; font-size: 0.9rem; color: var(--muted); }
-        
-        .product-panel {
-            display: none;
-        }
-        .product-panel.active {
-            display: block;
-        }
+        .section-box h3 { font-size: 0.95rem; margin: 0 0 10px 0; font-weight: 600; letter-spacing: -0.01em; }
+        .section-box p { margin: 0; font-size: 0.88rem; color: var(--muted); }
     </style>
 </head>
 <body>
@@ -173,39 +241,45 @@
     <div class="wrapper">
         <div class="header-title">
             <h1>Studio Wallpapers</h1>
-            <p>Handcrafted desktop & mobile backgrounds for clean setups.</p>
+            <p>Curated high-resolution visual assets for minimal developer & creator setups.</p>
         </div>
 
-        <!-- Thumbnail Navigation Bar (Controls which package is shown) -->
-        <div class="product-grid" style="padding: 15px; margin-bottom: 20px;">
-            <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
-                <span style="font-size: 0.75rem; font-family: monospace; color: var(--muted);">SELECT TIER:</span>
-                <div class="thumb-row">
-                    <button class="thumb-btn active" onclick="switchProduct(0, this)">01 / Starter</button>
-                    <button class="thumb-btn" onclick="switchProduct(1, this)">02 / Pro</button>
-                    <button class="thumb-btn" onclick="switchProduct(2, this)">03 / Studio</button>
-                    <button class="thumb-btn" onclick="switchProduct(3, this)">04 / Ultimate</button>
-                </div>
+        <!-- Interactive Tier Switcher Card -->
+        <div class="switcher-card">
+            <span class="switcher-label">CHOOSE EDITION</span>
+            <div class="thumb-row">
+                <button class="thumb-btn active" onclick="switchProduct(0, this)">
+                    <span class="btn-tier">Tier 01</span>
+                    <span class="btn-name">Starter</span>
+                </button>
+                <button class="thumb-btn" onclick="switchProduct(1, this)">
+                    <span class="btn-tier">Tier 02</span>
+                    <span class="btn-name">Pro Creator</span>
+                </button>
+                <button class="thumb-btn" onclick="switchProduct(2, this)">
+                    <span class="btn-tier">Tier 03</span>
+                    <span class="btn-name">Studio</span>
+                </button>
+                <button class="thumb-btn" onclick="switchProduct(3, this)">
+                    <span class="btn-tier">Tier 04</span>
+                    <span class="btn-name">Ultimate</span>
+                </button>
             </div>
         </div>
 
         <!-- Dynamic Product Panels -->
         {% for product in products %}
         <div class="product-panel {% if loop.first %}active{% endif %}" id="panel-{{ loop.index0 }}">
-            <div class="nav">
-                <strong>STORE // {{ product.id }}</strong>
-                <span>Digital Asset</span>
-            </div>
-
             <div class="product-grid">
                 <div class="preview-pane">
-                    <div class="main-img" style="background: {{ product.previews[0] }};">
+                    <div class="main-img">
                         [ Preview: {{ product.name }} ]
                     </div>
                 </div>
 
                 <div class="details-pane">
                     <div>
+                        <div class="nav-tag">EDITION // {{ product.id }}</div>
                         <h2 class="product-title">{{ product.name }}</h2>
                         <div class="price-tag">{{ product.price }}€</div>
                         <p class="desc">{{ product.subtitle }}</p>
@@ -219,9 +293,9 @@
 
                     <div>
                         <button class="btn-action" onclick="window.location.href='{{ product.stripe_link }}'">Purchase Pack ({{ product.price }}€)</button>
-                        <div class="meta-footer">Secure delivery · Instant ZIP link</div>
-                        <div style="text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 15px;">
-                            Questions? Contact <a href="mailto:{{ product.support_email }}" style="color: var(--text);">{{ product.support_email }}</a>
+                        <div class="meta-footer">Secure checkout via Stripe · Instant ZIP download</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 12px;">
+                            Questions? Reach out at <a href="mailto:{{ product.support_email }}" style="color: var(--text); text-decoration: underline;">{{ product.support_email }}</a>
                         </div>
                     </div>
                 </div>
@@ -230,22 +304,22 @@
         {% endfor %}
 
         <div class="section-box">
-            <h3>About the Collections</h3>
-            <p>Designed for minimal setups, coding environments, and high-PPI screens. Each wallpaper has been manually checked for color grading consistency across mobile OLED and desktop IPS panels.</p>
+            <h3>Engineered for High-PPI Displays</h3>
+            <p>Each wallpaper is manually color-graded and optimized to look crisp across modern OLED mobile screens, 4K desktop monitors, and ultrawide setups without artifacting or compression strain.</p>
         </div>
     </div>
 
     <script>
         function switchProduct(index, clickedBtn) {
-            // Hide all product panels
+            // Hide all panels
             document.querySelectorAll('.product-panel').forEach(panel => {
                 panel.classList.remove('active');
             });
             
-            // Show the selected product panel
+            // Show target panel
             document.getElementById('panel-' + index).classList.add('active');
             
-            // Update active state on buttons
+            // Update button styles
             document.querySelectorAll('.thumb-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
