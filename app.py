@@ -29,6 +29,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(150), nullable=False)
     is_verified = db.Column(db.Boolean, default=False)
     verification_code = db.Column(db.String(6), nullable=True)
+    accepted_policy = db.Column(db.Boolean, default=False)
+    marketing_opt_in = db.Column(db.Boolean, default=False)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -42,7 +44,6 @@ def send_verification_email(target_email, code):
         msg['From'] = 'support@noxelstudio.dev'
         msg['To'] = target_email
         
-        # Load API key securely from environment variable
         resend_key = os.environ.get('RESEND_API_KEY', '')
         
         server = smtplib.SMTP('smtp.resend.com', 587)
@@ -79,13 +80,27 @@ def login():
         password = request.form.get('password')
 
         if action == 'register':
+            policy = request.form.get('policy')
+            if not policy:
+                flash('You must agree to the Terms & Privacy Policy to register.')
+                return redirect(url_for('login'))
+
             user = User.query.filter_by(email=email).first()
             if user:
                 flash('Email already exists. Please log in.')
                 return redirect(url_for('login'))
             
+            marketing = True if request.form.get('marketing') else False
             code = str(random.randint(100000, 999999))
-            new_user = User(email=email, password_hash=generate_password_hash(password), verification_code=code, is_verified=False)
+            
+            new_user = User(
+                email=email, 
+                password_hash=generate_password_hash(password), 
+                verification_code=code, 
+                is_verified=False,
+                accepted_policy=True,
+                marketing_opt_in=marketing
+            )
             db.session.add(new_user)
             db.session.commit()
             
