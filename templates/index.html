@@ -110,9 +110,22 @@
             .thumb-btn { background: #1c1c1e; margin: 0 6px; }
         }
 
-        /* ─── PRODUCT PRESENTATION ─── */
-        .product-panel { display: none; opacity: 0; transition: opacity 0.4s ease; }
-        .product-panel.active { display: block; opacity: 1; }
+        /* ─── PRODUCT PRESENTATION & ENHANCED TRANSITIONS ─── */
+        @keyframes subtleFadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-panel { 
+            display: none; 
+            opacity: 0; 
+        }
+        
+        .product-panel.active { 
+            display: block; 
+            opacity: 1; 
+            animation: subtleFadeUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
         
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 80px); align-items: center; margin-bottom: clamp(80px, 12vw, 140px); }
         
@@ -125,9 +138,9 @@
         .main-img {
             width: 100%; aspect-ratio: 4/3; background: #1d1d1f;
             border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            position: relative; overflow: hidden; transition: transform 0.3s ease;
+            position: relative; overflow: hidden; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        @media (hover: hover) { .main-img:hover { transform: scale(1.02); } }
+        @media (hover: hover) { .main-img:hover { transform: scale(1.03); } }
         
         .coming-soon-badge {
             background: rgba(255,255,255,0.1); color: var(--text); padding: 8px 16px; border-radius: 980px;
@@ -201,7 +214,7 @@
             <a href="/" class="logo-tag">Noxel Studio</a>
             <div class="auth-container">
                 <a class="btn-nav" onclick="toggleCart()">
-                    Bag (<span id="cart-badge">0</span>)
+                    Cart (<span id="cart-badge">0</span>)
                 </a>
                 {% if current_user.is_authenticated %}
                     <div class="user-pill">
@@ -219,7 +232,7 @@
     <div id="cart-overlay" class="cart-overlay" onclick="toggleCart()"></div>
     <div id="cart-sidebar" class="cart-sidebar">
         <div class="cart-header">
-            <h3>Bag</h3>
+            <h3>Cart</h3>
             <button class="cart-close-btn" onclick="toggleCart()">✕</button>
         </div>
         <div id="cart-items" class="cart-items"></div>
@@ -276,7 +289,7 @@
                     </div>
                     <div>
                         <button class="btn-action" onclick="addToCart('{{ product.id }}', '{{ product.name }}', {{ product.price }})">
-                            Add to Bag
+                            Add to Cart
                         </button>
                     </div>
                 </div>
@@ -315,20 +328,27 @@
     <script>
         const isAuthenticated = {{ 'true' if current_user.is_authenticated else 'false' }};
 
-        // ─── APPLE STYLE PRODUCT SWITCHER ───
+        // ─── ENHANCED APPLE STYLE PRODUCT SWITCHER ───
         let activeProductIndex = 0;
         function switchProduct(index, clickedBtn) {
             if(activeProductIndex === index) return;
             activeProductIndex = index;
             
-            document.querySelectorAll('.product-panel').forEach(panel => {
-                panel.classList.remove('active');
-            });
+            const currentActive = document.querySelector('.product-panel.active');
+            if (currentActive) {
+                currentActive.classList.remove('active');
+            }
             
-            // Short delay for smooth fade
-            setTimeout(() => {
-                document.getElementById('panel-' + index).classList.add('active');
-            }, 50);
+            // Force browser reflow to reset CSS animation state before applying new one
+            void document.body.offsetWidth;
+            
+            const nextPanel = document.getElementById('panel-' + index);
+            if(nextPanel) {
+                // Short delay to allow smooth fade out of previous element
+                setTimeout(() => {
+                    nextPanel.classList.add('active');
+                }, 10);
+            }
             
             document.querySelectorAll('.thumb-btn').forEach(btn => btn.classList.remove('active'));
             if(clickedBtn) {
@@ -377,7 +397,7 @@
             });
 
             badge.innerText = count; totalEl.innerText = total.toFixed(2);
-            if(cart.length === 0) container.innerHTML = '<div style="color: var(--muted); text-align: center; margin-top: 40px;">Your bag is empty.</div>';
+            if(cart.length === 0) container.innerHTML = '<div style="color: var(--muted); text-align: center; margin-top: 40px;">Your cart is empty.</div>';
         }
 
         function removeFromCart(index) { cart.splice(index, 1); saveCart(); }
@@ -393,7 +413,7 @@
         }
 
         function checkout() {
-            if(cart.length === 0) return alert('Your bag is empty.');
+            if(cart.length === 0) return alert('Your cart is empty.');
             if (!isAuthenticated) {
                 alert('You must sign in with a Noxel ID before proceeding to checkout.');
                 window.location.href = "{{ url_for('login') }}";
